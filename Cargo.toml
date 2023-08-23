@@ -1,0 +1,17 @@
+[package]
+name = "tank_verifier"
+version = "0.1.0"
+authors = ["Your Name <your.email@example.com>"]
+edition = "2018"
+
+# Adding metadata for wasm
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# If you need any external crates, you can add them here.
+
+[profile.release]
+# This makes the compiled code smaller and more optimized
+opt-level = "s"
+lto = true
