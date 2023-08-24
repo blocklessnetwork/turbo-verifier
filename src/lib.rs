@@ -58,7 +58,8 @@ impl Shot {
     }
 }
 
-// Global mutable variables to store tank healths after verification
+// Global mutable variables to store tank healths and success after verification
+static mut SUCCESS: i32 = 0;
 static mut TANK1_HEALTH: i32 = 0;
 static mut TANK2_HEALTH: i32 = 0;
 
@@ -66,7 +67,7 @@ static mut TANK2_HEALTH: i32 = 0;
 pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32, 
                                     tank2_x: i32, tank2_y: i32, 
                                     shot1_x: i32, shot1_y: i32, shot1_velocity: i32, shot1_status: i32, 
-                                    shot2_x: i32, shot2_y: i32, shot2_velocity: i32, shot2_status: i32) -> i32 {
+                                    shot2_x: i32, shot2_y: i32, shot2_velocity: i32, shot2_status: i32) {
 
     let mut tank1 = Tank::new(tank1_x, tank1_y);
     let mut tank2 = Tank::new(tank2_x, tank2_y);
@@ -75,19 +76,21 @@ pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32,
 
     if !tank1.is_within_boundaries() || !tank2.is_within_boundaries() || tank1.is_colliding_with(&tank2) {
         unsafe {
+            SUCCESS = 0;
             TANK1_HEALTH = 0;
             TANK2_HEALTH = 0;
         }
-        return 0; // Invalid game state
+        return;
     }
 
     if shot1.status == 1 {
         if !shot1.is_within_boundaries() || !shot1.has_valid_velocity() {
             unsafe {
+                SUCCESS = 0;
                 TANK1_HEALTH = 0;
                 TANK2_HEALTH = 0;
             }
-            return 0; // Invalid game state
+            return;
         }
         tank2.is_hit_by(&shot1);
     }
@@ -95,19 +98,25 @@ pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32,
     if shot2.status == 1 {
         if !shot2.is_within_boundaries() || !shot2.has_valid_velocity() {
             unsafe {
+                SUCCESS = 0;
                 TANK1_HEALTH = 0;
                 TANK2_HEALTH = 0;
             }
-            return 0; // Invalid game state
+            return;
         }
         tank1.is_hit_by(&shot2);
     }
 
     unsafe {
+        SUCCESS = 1;
         TANK1_HEALTH = tank1.health;
         TANK2_HEALTH = tank2.health;
     }
-    return 1; // Valid game state
+}
+
+#[no_mangle]
+pub extern "C" fn get_success() -> i32 {
+    unsafe { SUCCESS }
 }
 
 #[no_mangle]
