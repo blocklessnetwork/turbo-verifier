@@ -8,10 +8,16 @@ runtime = pywasm.load(
 # Both tanks and shots are within the play area, tanks are not colliding, and shots have valid velocity.
 result1 = runtime.exec('verify_game_state', [
                        10, 10, 30, 30, 5, 5, 1, 1, 15, 15, 1, 1])
-print(result1)  # Should print 1 (ok)
+tank1_health1 = runtime.exec('get_tank1_health', [])
+tank2_health1 = runtime.exec('get_tank2_health', [])
+print(
+    f"Test 1 - Tank 1 Health: {tank1_health1}, Tank 2 Health: {tank2_health1}")
 
 # Test 2: Expected to fail
 # The second tank is placed outside the play area.
 result2 = runtime.exec('verify_game_state', [
                        10, 10, 10, 300, 5, 5, 1, 1, 15, 15, 1, 1])
-print(result2)  # Should print 0 (fail)
+tank1_health2 = runtime.exec('get_tank1_health', [])
+tank2_health2 = runtime.exec('get_tank2_health', [])
+print(
+    f"Test 2 - Tank 1 Health: {tank1_health2}, Tank 2 Health: {tank2_health2}")
