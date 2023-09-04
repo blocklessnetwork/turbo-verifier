@@ -67,7 +67,7 @@ static mut TANK2_HEALTH: i32 = 0;
 pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32, 
                                     tank2_x: i32, tank2_y: i32, 
                                     shot1_x: i32, shot1_y: i32, shot1_velocity: i32, shot1_status: i32, 
-                                    shot2_x: i32, shot2_y: i32, shot2_velocity: i32, shot2_status: i32) {
+                                    shot2_x: i32, shot2_y: i32, shot2_velocity: i32, shot2_status: i32) -> i32 {
 
     let mut tank1 = Tank::new(tank1_x, tank1_y);
     let mut tank2 = Tank::new(tank2_x, tank2_y);
@@ -80,7 +80,7 @@ pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32,
             TANK1_HEALTH = 0;
             TANK2_HEALTH = 0;
         }
-        return;
+        return 1;
     }
 
     if shot1.status == 1 {
@@ -90,7 +90,7 @@ pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32,
                 TANK1_HEALTH = 0;
                 TANK2_HEALTH = 0;
             }
-            return;
+            return 1;
         }
         tank2.is_hit_by(&shot1);
     }
@@ -102,7 +102,7 @@ pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32,
                 TANK1_HEALTH = 0;
                 TANK2_HEALTH = 0;
             }
-            return;
+            return 1;
         }
         tank1.is_hit_by(&shot2);
     }
@@ -112,6 +112,8 @@ pub extern "C" fn verify_game_state(tank1_x: i32, tank1_y: i32,
         TANK1_HEALTH = tank1.health;
         TANK2_HEALTH = tank2.health;
     }
+
+    return 0;
 }
 
 #[no_mangle]
