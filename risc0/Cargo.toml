@@ -1,0 +1,33 @@
+[package]
+name = "wasm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wasmi = "0.31.0"
+risc0-zkvm = {version = "0.17.0", default-features = true, features = ["std","prove"] }
+serde = "1.0"
+wasm-methods = { path = "methods" }
+wat = "1.0"
+
+[features]
+cuda = ["risc0-zkvm/cuda"]
+default = []
+metal = ["risc0-zkvm/metal"]
+
+[profile.release-with-debug]
+inherits = "release"
+debug = true
+
+[profile.dev]
+opt-level = 3
+
+[profile.dev.build-override]
+opt-level = 3
+
+[profile.release]
+debug = 1
+lto = true
+
+[profile.release.build-override]
+opt-level = 3
