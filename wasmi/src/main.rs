@@ -3,7 +3,7 @@ use wasmi::*;
 
 fn main() -> Result<()> {
     let engine = Engine::default();
-    let wasm_bytes = std::fs::read("/Users/derekanderson/Projects/wasmi/tank_verifier.wasm")?;
+    let wasm_bytes = std::fs::read("./tank_verifier.wasm")?;
 
     let module = Module::new(&engine, &*wasm_bytes)?;
 
