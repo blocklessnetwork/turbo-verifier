@@ -8,10 +8,6 @@ use std::io::Read;
 
 use wasm_methods::{WASM_INTERP_ELF, WASM_INTERP_ID};
 
-fn wat2wasm(wat: &str) -> Result<Vec<u8>, wat::Error> {
-    wat::parse_str(wat)
-}
-
 fn run_guest(iters: i32) -> i32 {
 
         // Load Wasm File
