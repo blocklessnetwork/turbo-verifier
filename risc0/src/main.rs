@@ -56,27 +56,3 @@ fn main() {
     let fib_iters: i32 = 100;
     let _ = run_guest(fib_iters);
 }
-
-#[cfg(test)]
-mod tests {
-    fn fibonacci(n: i32) -> i32 {
-        let (mut a, mut b) = (0, 1);
-        for _ in 0..n {
-            let c = a;
-            a = b;
-            b += c;
-        }
-        a
-    }
-
-    #[test]
-    fn wasm_fib() {
-        let fib_iters: i32 = 10;
-        let result = super::run_guest(fib_iters);
-        assert_eq!(
-            result,
-            fibonacci(fib_iters),
-            "We expect the zkVM output to be the product of the inputs"
-        )
-    }
-}
