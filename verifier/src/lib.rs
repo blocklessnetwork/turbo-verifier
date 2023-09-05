@@ -72,31 +72,31 @@ pub extern "C" fn verify_game_state(
         success = 0;
         tank1_health = 0;
         tank2_health = 0;
-        return (success << 30) | (tank1_health << 20) | (tank2_health << 10);
-    }
-
-    if shot1.status == 1 {
-        if !shot1.is_within_boundaries() || !shot1.has_valid_velocity() {
-            success = 0;
-            tank1_health = 0;
-            tank2_health = 0;
-            return (success << 30) | (tank1_health << 20) | (tank2_health << 10);
+    } else {
+        if shot1.status == 1 {
+            if !shot1.is_within_boundaries() || !shot1.has_valid_velocity() {
+                success = 0;
+                tank1_health = 0;
+                tank2_health = 0;
+            } else {
+                tank2.is_hit_by(&shot1);
+            }
         }
-        tank2.is_hit_by(&shot1);
-    }
 
-    if shot2.status == 1 {
-        if !shot2.is_within_boundaries() || !shot2.has_valid_velocity() {
-            success = 0;
-            tank1_health = 0;
-            tank2_health = 0;
-            return (success << 30) | (tank1_health << 20) | (tank2_health << 10);
+        if shot2.status == 1 {
+            if !shot2.is_within_boundaries() || !shot2.has_valid_velocity() {
+                success = 0;
+                tank1_health = 0;
+                tank2_health = 0;
+            } else {
+                tank1.is_hit_by(&shot2);
+            }
         }
-        tank1.is_hit_by(&shot2);
     }
 
-    tank1_health = tank1.health;
-    tank2_health = tank2.health;
+    let encoded_success = (success & 0x3FF) << 20;
+    let encoded_tank1_health = (tank1_health & 0x3FF) << 10;
+    let encoded_tank2_health = tank2_health & 0x3FF;
 
-    (success << 30) | (tank1_health << 20) | (tank2_health << 10)
+    encoded_success | encoded_tank1_health | encoded_tank2_health
 }

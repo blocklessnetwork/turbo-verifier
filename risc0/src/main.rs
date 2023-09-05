@@ -12,7 +12,7 @@ fn run_guest(iters: i32) -> i32 {
 
         // Load Wasm File
         let mut wasm_file: Vec<u8> = Vec::new();
-        let mut file = File::open("./tank_verifier.wasm")
+        let mut file = File::open("./zk.wasm")
             .expect("Failed to open WASM file.");
         file.read_to_end(&mut wasm_file)
             .expect("Failed to load WASM file.");
